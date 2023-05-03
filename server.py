@@ -47,12 +47,12 @@ class Server:
             checkSum (int): the checksum of the segment
         """
 
-        content = "[" + status + " - " + "Time: " + str(datetime.datetime.now()) + " - source port: " + str(
+        content = "[" + status + " - " + "Time: " + str(datetime.datetime.now()) + " ,source port: " + str(
             s_port) + \
-                  " - dest port: " + str(d_port) + " - sequence number: " + str(sn) + \
-                  " - ack number: " + str(ack_n) + " - header length: " + str(header_size) + \
-                  " - ACK: " + str(ack) + " - FIN: " + str(fin) + " - window size: " + str(window_size) + \
-                  " - checksum: " + str(checkSum) + "]\n"
+                  "   ,dest port: " + str(d_port) + "   ,sequence number: " + str(sn) + \
+                  "   ,ack number: " + str(ack_n) + "   ,header size: " + str(header_size) + \
+                  "  ,ACK: " + str(ack) + " , FIN: " + str(fin) + "  ,window size: " + str(window_size) + \
+                  " , checksum: " + str(checkSum) + "]\n"
         log.write(content)
 
 

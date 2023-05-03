@@ -20,8 +20,8 @@ class Client:
 
         self.is_resend = []
         self.sender_timestamp = []
-        self.buffer = []  # read from source file
-        self.MSS = MSS  # one segment contains 576 characters, because 1 character is 1 byte in 'utf-16'
+        self.buffer = []  # read from source 
+        self.MSS = MSS  # one segment contains 576 characters
         self.s_file = s_file
 
         self.log_file = "client_log.txt"
@@ -54,7 +54,7 @@ class Client:
         data = file.read(self.MSS)
         while len(data) > 0:
             next_data = file.read(self.MSS)
-            # If next data is empty, means the current data is the final segment
+            # If next data empty, current data is final segment
             if len(next_data) == 0:
                 info = Info(self.ack_port, self.udpl_port, sn, ack_n, 0, 1,
                                                        self.inbyte, data)
@@ -68,7 +68,7 @@ class Client:
             sn += 1
             self.buffer.append(new_segment)
 
-    def logger(self, log, status, s_port, d_port, sn, ack_n, header_length, ack, fin,
+    def logger(self, log, status, s_port, d_port, sn, ack_n, header_size, ack, fin,
                   window_size,
                   checkSum, timeout_interval):
         """
@@ -92,12 +92,13 @@ class Client:
         None
         """
 
-        content = "[" + status + " - " + "Time: " + str(datetime.datetime.now()) + " - source port: " + str(
+        content = "[" + status + " - " + "Time: " + str(datetime.datetime.now()) + " ,source port: " + str(
             s_port) + \
-                  " - dest port: " + str(d_port) + " - sequence number: " + str(sn) + \
-                  " - ack number: " + str(ack_n) + " - header length: " + str(header_length) + \
-                  " - ACK: " + str(ack) + " - FIN: " + str(fin) + " - window size: " + str(window_size) + \
-                  " - checksum: " + str(checkSum)
+                  "   ,dest port: " + str(d_port) + "   ,sequence number: " + str(sn) + \
+                  "   ,ack number: " + str(ack_n) + "   ,header size: " + str(header_size) + \
+                  "  ,ACK: " + str(ack) + " , FIN: " + str(fin) + "  ,window size: " + str(window_size) + \
+                  " , checksum: " + str(checkSum) + "]\n"
+
         if status == "SEND" or status == "RESEND":
             content += " - timeout interval: " + str(timeout_interval)
         content += "]\n"
