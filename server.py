@@ -6,7 +6,21 @@ from socket import *
 from utility import Utils, Info
 
 class Server:
+    """
+    Class representing the server side of a UDP-based file transfer protocol.
+    """
+
     def __init__(self, dest_file, listening_port, ack_address, ack_port):
+        """
+        Initializes a new Server object.
+
+        Parameters:
+            dest_file (str): the path to the file where the received data will be saved
+            listening_port (int): the port on which the server will listen for incoming data
+            ack_address (str): the IP address of the machine where the ACKs will be sent
+            ack_port (int): the port on which the ACKs will be sent
+        """
+
         self.dest_file = dest_file
         self.log_file = "server_logs.txt"
         self.listening_port = listening_port
@@ -16,6 +30,23 @@ class Server:
     def logger(self, log, status, s_port, d_port, sn, ack_n,header_size, ack, fin,
                   window_size,
                   checkSum):
+        """
+        Writes a log entry to the specified file.
+
+        Parameters:
+            log (file): the file object representing the log file
+            status (str): the status of the communication ("SEND" or "RECEIVE")
+            s_port (int): the source port of the segment
+            d_port (int): the destination port of the segment
+            sn (int): the sequence number of the segment
+            ack_n (int): the acknowledgement number of the segment
+            header_size (int): the size of the header in bytes
+            ack (int): whether the ACK flag is set (0 or 1)
+            fin (int): whether the FIN flag is set (0 or 1)
+            window_size (int): the size of the receive window in bytes
+            checkSum (int): the checksum of the segment
+        """
+
         content = "[" + status + " - " + "Time: " + str(datetime.datetime.now()) + " - source port: " + str(
             s_port) + \
                   " - dest port: " + str(d_port) + " - sequence number: " + str(sn) + \
@@ -25,8 +56,9 @@ class Server:
         log.write(content)
 
 
-# Main Method ---------------------------------------------
-
+"""
+Main Method
+"""
 if __name__ == '__main__':
     # read from the command line
     try:
@@ -72,7 +104,7 @@ if __name__ == '__main__':
 
         if segment:
             # Unpack the received segment
-            info = segment_handle.unpack_segment(
+            info = segment_handle.unpack(
                 segment)
 
             # Prepare to check if segment has been corrupted and received in order
@@ -119,7 +151,7 @@ if __name__ == '__main__':
                                  info.ack,
                                  info.fin, info.window_size, info.checksum)
 
-                send_info = segment_handle.unpack_segment(
+                send_info = segment_handle.unpack(
                     ackSegment)
                 server.logger(log, "SEND", send_info.s_port, send_info.r_port, send_info.sn, send_info.ack_n, header_length,
                                  send_info.ack,
